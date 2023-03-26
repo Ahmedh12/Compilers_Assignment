@@ -1,0 +1,87 @@
+{
+    "StartingState": "S1",
+    "S1": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S2",
+            "S6"
+        ]
+    },
+    "S2": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S3",
+            "S13"
+        ]
+    },
+    "S3": {
+        "IsTerminating": false,
+        "a": [
+            "S4"
+        ]
+    },
+    "S4": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S5"
+        ]
+    },
+    "S5": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S2",
+            "S6"
+        ]
+    },
+    "S6": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S7"
+        ]
+    },
+    "S7": {
+        "IsTerminating": false,
+        "a": [
+            "S8"
+        ]
+    },
+    "S8": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S9"
+        ]
+    },
+    "S9": {
+        "IsTerminating": false,
+        "b": [
+            "S10"
+        ]
+    },
+    "S10": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S11"
+        ]
+    },
+    "S11": {
+        "IsTerminating": false,
+        "b": [
+            "S12"
+        ]
+    },
+    "S12": {
+        "IsTerminating": true
+    },
+    "S13": {
+        "IsTerminating": false,
+        "b": [
+            "S14"
+        ]
+    },
+    "S14": {
+        "IsTerminating": false,
+        "epsilon": [
+            "S5"
+        ]
+    }
+}
