@@ -1,0 +1,47 @@
+{
+    "StartingState": "A",
+    "A": {
+        "states": [
+            "S2",
+            "S11",
+            "S1"
+        ],
+        "IsTerminating": false,
+        "a": "B",
+        "[a-z]": "C",
+        "b": "C",
+        "c": "D"
+    },
+    "B": {
+        "states": [
+            "S5",
+            "S6",
+            "S8",
+            "S7"
+        ],
+        "IsTerminating": false,
+        "a": "C",
+        "[a-z]": "B",
+        "b": "D",
+        "c": "C"
+    },
+    "C": {
+        "states": [],
+        "IsTerminating": false,
+        "a": "C",
+        "[a-z]": "C",
+        "b": "C",
+        "c": "C"
+    },
+    "D": {
+        "states": [
+            "S10",
+            "S9"
+        ],
+        "IsTerminating": true,
+        "a": "C",
+        "[a-z]": "C",
+        "b": "C",
+        "c": "C"
+    }
+}
