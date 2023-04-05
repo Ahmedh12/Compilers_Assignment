@@ -31,7 +31,6 @@ def ExtractAtomicExpressions(regex):
             stack.pop(-1) #remove the opening bracket from the stack
             atomics.append(atomic)
             atomic = ""
-    #atomics.reverse()
     return atomics
 
 
@@ -43,6 +42,12 @@ class State:
         self.stateID = stateID
         self.edges = edges or []
 
+    def __str__(self):
+      return f"state_id:{self.stateID}\n edges:{self.edges}\n"
+
+    def __repr__(self):
+      return self.__str__()
+
 
 class NFA:
     initial = None
@@ -51,20 +56,16 @@ class NFA:
     def __init__(self, initial, accept):
         self.initial = initial
         self.accept = accept or []
+    
+    def __str__(self):
+      return f"intial:{self.initial}  final:{self.accept}"
 
+    def __repr__(self):
+      return self.__str__()
 
 def InsertConcatenationDot(regex):
-    #regex = re.sub(r'\)(\w|\()', r').\1', regex)
-    
     regex = re.sub(r'(\w|\))(\(|\w)', r'\1.\2', regex)
     regex = re.sub(r'\)(\()', r').\1', regex)
-    #regex = re.sub(r'\](?=[a-zA-Z0-9])', '].', regex)
-    #regex = re.sub(r'\)(?=[a-zA-Z0-9])', ').', regex)
-    #regex = re.sub(r'(\w|\))\(', r'\1.(', regex)
-    #regex = re.sub(r'\)([A-Z123]\()', ').\g<1>', regex)
-    #regex = re.sub(r'\)', ').', regex)
-
-
     return regex
 
 
@@ -88,95 +89,93 @@ def RegexToNFA(regex):
             atomics[i] = MoveSymbolToEndOfAtomicExpression(atomics[i])
         counter = -1
         stack = []
+        first_itr = True
         for atomic in atomics:
                 match = re.search(r'\[.*?\]', atomic)
                 if match:
-                    
-                    character_class = match.group()
+                  character_class = match.group()
+                  counter=counter+1
+                  initial = State()
+                  initial.stateID=counter
+                  accept = State()
+                  accept.stateID=counter+1
+                  initial.edges.append((character_class, accept))
+                  accept.edges=[]
+                  stack.append(NFA(initial, [accept]))
+                  counter=counter+1
+                  continue
+
+                for i in range(len(atomic)):
+                  
+                  if atomic[i] == '.' : # and len(stack) > 1
+                    NFA2 = stack.pop()
+                    NFA1 = stack.pop()
+                    NFA1.accept[0].edges.append(("epsilon", NFA2.initial))
+                    NFA1.accept = NFA2.accept
+                    stack.append(NFA1)
+
+                  elif atomic[i] == '|':
+                    NFA2 = stack.pop()
+                    NFA1 = stack.pop()
+                    counter=counter+1
+                    initial = State()
+                    initial.stateID=counter
+                    accept=State()
+                    counter=counter+1
+                    accept.stateID=counter
+                    initial.edges.append(("epsilon", NFA1.initial))
+                    initial.edges.append(("epsilon", NFA2.initial))
+                    #accept = NFA1.accept + NFA2.accept
+                    NFA1.accept[0].edges.append(("epsilon",accept))
+                    NFA2.accept[0].edges.append(("epsilon",accept))
+                    stack.append(NFA(initial, [accept]))
+                  elif atomic[i] == '*':
+                      counter=counter+1
+                      NFA0 = stack.pop()
+                      initial = State()
+                      initial.stateID=counter
+                      accept = State()
+                      counter=counter+1
+                      accept.stateID=counter
+                      initial.edges.append(("epsilon", NFA0.initial))
+                      initial.edges.append(("epsilon", accept))
+                      NFA0.accept[0].edges.append(("epsilon", initial))
+                      NFA0.accept[0].edges.append(("epsilon", accept))
+                      stack.append(NFA(initial, [accept]))
+                  elif atomic[i] == '?':
+                      counter=counter+1
+                      NFA0 = stack.pop()
+                      NFA0.initial.edges.append(("epsilon", NFA0.accept[0]))
+                      stack.append(NFA0)
+
+                  elif atomic[i] == '+':
+                      counter=counter+1
+                      NFA0 = stack.pop()
+                      initial = State()
+                      initial.stateID=counter
+                      accept = State()
+                      counter=counter+1
+                      accept.stateID=counter
+                      initial.edges.append(("epsilon", NFA0.initial))
+                      NFA0.accept[0].edges.append(("epsilon", accept))
+                      NFA0.accept[0].edges.append(("epsilon", NFA0.initial))
+                      stack.append(NFA(initial, [accept]))
+                  else:
                     counter=counter+1
                     initial = State()
                     initial.stateID=counter
                     accept = State()
                     accept.stateID=counter+1
-                    initial.edges.append((character_class, accept))
-                    accept.edges=[]
+                    initial.edges.append((atomic[i], accept))
                     stack.append(NFA(initial, [accept]))
                     counter=counter+1
-                    continue
-                
-            #else:                
-                for i in range(len(atomic)):
-                    if atomic[i] == '.':
-                        NFA2 = stack.pop()
-                        NFA1 = stack.pop()
-                        NFA1.accept[0].edges.append(("epsilon", NFA2.initial))
-                        NFA1.accept = NFA2.accept
-                        stack.append(NFA1)
-                    elif atomic[i] == '|':
-                        NFA2 = stack.pop()
-                        NFA1 = stack.pop()
-                        counter=counter+1
-                        initial = State()
-                        initial.stateID=counter
-                        accept=State()
-                        counter=counter+1
-                        accept.stateID=counter
-                        initial.edges.append(("epsilon", NFA1.initial))
-                        initial.edges.append(("epsilon", NFA2.initial))
-                        #accept = NFA1.accept + NFA2.accept
-                        NFA1.accept[0].edges.append(("epsilon",accept))
-                        NFA2.accept[0].edges.append(("epsilon",accept))
-                        stack.append(NFA(initial, [accept]))
-                    elif atomic[i] == '*':
-                        counter=counter+1
-                        NFA0 = stack.pop()
-                        initial = State()
-                        initial.stateID=counter
-                        accept = State()
-                        counter=counter+1
-                        accept.stateID=counter
-                        initial.edges.append(("epsilon", NFA0.initial))
-                        initial.edges.append(("epsilon", accept))
-                        NFA0.accept[0].edges.append(("epsilon", initial))
-                        NFA0.accept[0].edges.append(("epsilon", accept))
-                        stack.append(NFA(initial, [accept]))
 
-                    
-                    elif atomic[i] == '?':
-                        counter=counter+1
-                        NFA0 = stack.pop()
-                        NFA0.initial.edges.append(("epsilon", NFA0.accept[0]))
-                        stack.append(NFA0)
-
-                    elif atomic[i] == '+':
-                        counter=counter+1
-                        NFA0 = stack.pop()
-                        initial = State()
-                        initial.stateID=counter
-                        accept = State()
-                        counter=counter+1
-                        accept.stateID=counter
-                        initial.edges.append(("epsilon", NFA0.initial))
-                        NFA0.accept[0].edges.append(("epsilon", accept))
-                        NFA0.accept[0].edges.append(("epsilon", NFA0.initial))
-                        stack.append(NFA(initial, [accept]))
-
-                
-                    else:
-                        counter=counter+1
-                        initial = State()
-                        initial.stateID=counter
-                        accept = State()
-                        accept.stateID=counter+1
-                        initial.edges.append((atomic[i], accept))
-                        stack.append(NFA(initial, [accept]))
-                        counter=counter+1
     if len(stack) >= 1:
         return stack.pop()
+        
 
 
 def WriteJsonFile(NFA , filename):
- 
     data = dict()
     visited = set()
     data["StartingState"]="S"+str(NFA.initial.stateID)
@@ -193,7 +192,7 @@ def WriteJsonFile(NFA , filename):
                         print("")
                     else:
                        data["S"+str(state.stateID)]=  dict()
-                       data["S"+str(state.stateID)]["IsTerminating"] = True
+                       data["S"+str(state.stateID)]["IsTerminating"]= True
                     for char, dest_state in state.edges:
                         if data.get("S"+str(state.stateID),{}).get(str(char)) is not None:
                             

@@ -6,7 +6,7 @@ def draw_DFA(DFA,file_name="DFA"):
     G = graphviz.Digraph()
     nodes = list(DFA.keys())[1:]
     for node in nodes:
-        G.node(DFA.get("StartingState"),color='green')
+        G.node(DFA.get("StartingState"),color='green',shape = 'circle')
         if DFA.get(node).get('IsTerminating'):
             G.node(node, shape='doublecircle' , color='red')
         else:
@@ -26,7 +26,7 @@ def draw_NFA(NFA , filename="NFA"):
     nodes = list(NFA.keys())[1:]
     for node in nodes:
         G.node(NFA.get("StartingState"),color='green')
-        if NFA.get(node).get('IsTerminating') == 'true':
+        if NFA.get(node).get('IsTerminating') == True:
             G.node(node, shape='doublecircle' , color='red')
         else:
             G.node(node)
@@ -37,7 +37,7 @@ def draw_NFA(NFA , filename="NFA"):
                     for next_state in [NFA.get(state).get(transition)]:
                         for next_states in next_state:
                             if transition == "epsilon":
-                                G.edge(state, next_states, label='epsilon')
+                                G.edge(state, next_states, label='ε')
                             else:
                                 G.edge(state, next_states, label=transition)
     G.render(filename , format='png' ,cleanup=True , quiet=True)
