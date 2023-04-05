@@ -40,8 +40,6 @@ def draw_NFA(NFA , filename="NFA"):
                                 G.edge(state, next_states, label='epsilon')
                             else:
                                 G.edge(state, next_states, label=transition)
-                                print("next state",next_states)
-                                print("state",state)
     G.render(filename , format='png' ,cleanup=True , quiet=True)
     return G
 
