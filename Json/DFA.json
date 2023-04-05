@@ -1,1 +1,34 @@
-{"StartingState": "A", "A": {"states": ["S0"], "IsTerminating": false, "a": "B", "b": "C"}, "B": {"states": ["S2", "S1"], "IsTerminating": false, "a": "C", "b": "C"}, "C": {"states": ["S3"], "IsTerminating": false, "a": "C", "b": "C"}}
+{
+    "StartingState": "A",
+    "A": {
+        "states": [
+            "S0"
+        ],
+        "IsTerminating": false,
+        "a": "B",
+        "b": "C"
+    },
+    "B": {
+        "states": [
+            "S2",
+            "S1"
+        ],
+        "IsTerminating": false,
+        "a": "C",
+        "b": "D"
+    },
+    "C": {
+        "states": [],
+        "IsTerminating": false,
+        "a": "C",
+        "b": "C"
+    },
+    "D": {
+        "states": [
+            "S3"
+        ],
+        "IsTerminating": true,
+        "a": "C",
+        "b": "C"
+    }
+}

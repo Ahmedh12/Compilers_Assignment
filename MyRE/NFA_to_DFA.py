@@ -120,6 +120,7 @@ def get_accepting_states(DFA):
     for state in DFA.keys():
         if state != "StartingState" and DFA.get(state).get('IsTerminating') == True:
             accepting_states.append(state)
+            print(state)
     return accepting_states
 
 def get_non_accepting_states(DFA):

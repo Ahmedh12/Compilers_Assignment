@@ -193,7 +193,7 @@ def WriteJsonFile(NFA , filename):
                         print("")
                     else:
                        data["S"+str(state.stateID)]=  dict()
-                       data["S"+str(state.stateID)]["IsTerminating"]="true"
+                       data["S"+str(state.stateID)]["IsTerminating"] = True
                     for char, dest_state in state.edges:
                         if data.get("S"+str(state.stateID),{}).get(str(char)) is not None:
                             
@@ -213,7 +213,7 @@ def WriteJsonFile(NFA , filename):
                 print("")
             else:
                        data["S"+str(state.stateID)]= dict()
-                       data["S"+str(state.stateID)]["IsTerminating"]="false"
+                       data["S"+str(state.stateID)]["IsTerminating"] = False
                        
             if data.get("S"+str(state.stateID))  is not None:
                 if data.get("S"+str(state.stateID),{}).get(str(char))is not None:

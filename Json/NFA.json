@@ -1,1 +1,1 @@
-{"StartingState": "S0", "S0": {"IsTerminating": "false", "a": ["S1"]}, "S1": {"IsTerminating": "false", "epsilon": ["S2"]}, "S2": {"IsTerminating": "false", "b": ["S3"]}, "S3": {"IsTerminating": "true"}}
+{"StartingState": "S0", "S0": {"IsTerminating": false, "a": ["S1"]}, "S1": {"IsTerminating": false, "epsilon": ["S2"]}, "S2": {"IsTerminating": false, "b": ["S3"]}, "S3": {"IsTerminating": true}}
