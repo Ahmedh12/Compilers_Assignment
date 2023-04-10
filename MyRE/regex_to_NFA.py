@@ -73,6 +73,7 @@ def MoveSymbolToEndOfAtomicExpression(expression):
 
 def RegexToNFA(regex):   
     if ValidateRegex(regex):
+        regex = re.sub(r"\.", "dot", regex)
         regex = InsertConcatenationDot(regex)
         regex = regex.replace(" ", "")
         atomics = ExtractAtomicExpressions(regex)
@@ -84,6 +85,7 @@ def RegexToNFA(regex):
         for atomic in atomics:
                 pattern = r'^[a-zA-Z0-9]+$'
                 if re.match(pattern, atomic):
+                        atomic = re.sub(r"dot", ".", atomic)
                         counter=counter+1
                         initial = State()
                         initial.stateID=counter
